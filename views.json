@@ -1,13 +1,41 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Editorial Operations for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Editorial week",
+    "subtitle": "Fictional demo unless you have imported your own records",
     "sections": [
       {
+        "title": "Open work",
+        "sql": "select code,title,owner,status,due_on,reviews_waiting,tasks_open from v_editorial where status not in ('published','archived') order by due_on nulls last,code"
+      },
+      {
         "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "sql": "select * from v_attention order by due_on,code"
+      }
+    ]
+  },
+  {
+    "name": "approvals",
+    "title": "Review and evidence",
+    "sections": [
+      {
+        "title": "Current revision reviews",
+        "sql": "select * from v_review_queue order by due_on,code"
+      },
+      {
+        "title": "Handover checks",
+        "sql": "select code,title,can_handover,reviews_waiting,tasks_open,expired_evidence,claims_checked,advertising from v_readiness where status not in ('published','archived') order by code"
+      }
+    ]
+  },
+  {
+    "name": "results",
+    "title": "Content results",
+    "sections": [
+      {
+        "title": "Latest observations",
+        "note": "Each observation is cumulative to its date. These are recorded figures, not a live connection or a claim of attribution.",
+        "sql": "select * from v_performance order by code"
       }
     ]
   }

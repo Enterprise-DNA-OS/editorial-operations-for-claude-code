@@ -1,115 +1,126 @@
-<h1 align="center">Editorial Operations for Claude Code</h1>
+# Editorial Operations for Claude Code
 
-<p align="center">
-  <strong>The open-source editorial operations system that is just a database and Claude Code.</strong>
-</p>
+Own your editorial deadlines, copy and review history. An open-source database for a marketing team's daily production work, created by Enterprise DNA. Works with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free, MIT. Install and run the database. | Your fields, review rules and StoryChief records brought across. A web front end or different stack by agreement. | Installed, connected and operated through Omni by Enterprise DNA. One setup fee, then a retainer. |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your StoryChief data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=storychief">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/storychief?utm_source=github&utm_medium=readme&utm_campaign=storychief">How it works</a></td>
-  </tr>
-</table>
+[Book a call](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_campaign=storychief)
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-storychief">Instead of StoryChief</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+## What it does
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+A marketing manager checks the editorial week, chases pending reviews, verifies claim evidence, clears production tasks and prepares a publication handover. Writers keep immutable revisions. Approval is specific to the exact revision. The database preserves imported source records and every logged change. Read-only branded documents show the brief, approval record and campaign handover.
 
----
-
-## What is this
-
-Editorial Operations for Claude Code does the job you pay StoryChief for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the StoryChief dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays StoryChief per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=storychief).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+[StoryChief Enterprise starts at EUR 1,000+ per month, billed yearly](https://www.storychief.io/pricing), or EUR 12,000+ for twelve months, checked 27 October 2026. This is a published starting price, not a customer invoice. Lower plans exist. This free base covers editorial records and handovers. Website publishing, social distribution, media generation and live analytics connections are custom integration work. There is no assertion that it replaces every StoryChief feature.
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or newer. No database server needed for the embedded demo.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/editorial-operations-for-claude-code.git
-cd editorial-operations-for-claude-code
 npm install
 npm run demo
+node scripts/editorial.mjs editorial-week
+node scripts/editorial.mjs publication-handover
+node scripts/editorial.mjs insights --json
+npm run view
+npm run docs
+npm test
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+The demo uses fictional records and relative dates. For your own records use a new DATA_DIR and npm run migrate without seeding, or set DATABASE_URL to a dedicated Postgres database. All statements are compatible with PostgreSQL and PGlite. See docs/verification.md for actual tested environments. The demo never calls a vendor or sends anything.
 
-### Use it with your own Postgres or Supabase
+## Commands
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+- `help`
+- `campaigns`
+- `stories`
+- `show`: `<story>`
+- `editorial-week`
+- `approval-chase`
+- `claims-review`
+- `production-tasks`
+- `publication-handover`
+- `content-refresh`
+- `performance`
+- `attention`
+- `compliance`
+- `insights`
+- `history`: `<story>`
+- `add-campaign`: `--code= --name= --objective= --owner= --ends= --actor=`
+- `add`: `--code= --campaign= --title= --owner= --due= --body-file= --brief= [--channel= --language=] --actor=`
+- `revise`: `<story> --body-file= [--title=] --actor=`
+- `assign`: `<story> --owner= --due= --actor=`
+- `request-review`: `<story> --reviewer= --due= --actor=`
+- `review`: `<story> --reviewer= --decision=approved|changes --note= --actor=`
+- `claim`: `<story> --claim= --source= --reviewer= --checked= --until= --actor=`
+- `check-claims`: `<story> --advertising=yes|no --disclosure= --note= --actor=`
+- `add-task`: `<story> --code= --title= --owner= --due= --actor=`
+- `complete-task`: `<task> --actor=`
+- `log`: `<story> --note= --actor=`
+- `ready`: `<story> --actor=`
+- `record-publication`: `<story> --url= --date= --actor=`
+- `record-metrics`: `<story> --date= --views= --leads= --source= --actor=`
+- `archive`: `<story> --note= --actor=`
+- `import`: `storychief <saved-json-file-or-folder> --source= --campaign= --actor= [--dry-run]`
+- `export`: `--out=<new.json>`
+- `weekly-review`
+- `draft-brief`: `<story>`
+- `draft-handover`: `<story>`
 
-## The commands
+Prefix each with node scripts/editorial.mjs. Every command supports --json. The matching slash-command recipes are in .claude/commands. /customise adds a field or rule through a migration. /new-view adds a read-only report.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+## Bring your history
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+Save StoryChief's documented Get Stories and Get Story responses as JSON. Retrieve all pages with status=all and detail content included. Save a single account's files in imports/storychief/.
 
-## Instead of StoryChief
-
-<!-- TODO(author): how to bring data across from StoryChief; link docs/replace-storychief.md -->
-
-## Architecture
-
+```bash
+node scripts/editorial.mjs import storychief imports/storychief --source=our-account --campaign=AUTUMN --actor=Operator --dry-run
+node scripts/editorial.mjs import storychief imports/storychief --source=our-account --campaign=AUTUMN --actor=Operator
+node scripts/editorial.mjs export --out=exports/editorial.json
 ```
-editorial-operations-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+One command loads the saved export. Exporting from the vendor is a separate step. Missing content is counted. Imported articles start draft with no approved claims or reviewers. Published dates are preserved as source history and do not authorise a new publication. Unchanged rows do not duplicate. A changed source row aborts the entire batch for reconciliation. The importer reads only the files you supply and cannot detect omitted pages. [Exact mapping and limits](docs/replace-storychief.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Ten questions to ask
 
-## Contributing
+The insights command answers these from current records. These are useful combinations of local evidence, not a claim that StoryChief cannot be configured to answer similar questions.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+1. Which overdue articles also have outstanding reviews?
+2. Which near-term articles lack an owner?
+3. Which current drafts rely on expired evidence?
+4. Which published articles have no recorded results?
+5. Which articles have visits but no enquiries?
+6. Which campaigns contain stale unfinished content?
+7. Which writers have overdue production tasks?
+8. Which reviewed articles still lack an advertising decision?
+9. Which articles can be handed over with no outstanding checks?
+10. Which edits have left historical approvals behind?
 
-## Want it installed and run for you?
+## Your first hour: ten things to ask for
 
-Enterprise DNA installs Editorial Operations for Claude Code for your business, migrates your StoryChief data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+1. Put our business name, logo and colours in brand.json.
+2. Add our next campaign and its owner.
+3. Preview one complete saved StoryChief account export.
+4. Reconcile every exported page and article count.
+5. Assign the imported drafts to writers and deadlines.
+6. Add the first complete article revision.
+7. Request an editorial and a factual review.
+8. Record sources for its claims and its advertising identification.
+9. Clear production tasks and prepare the campaign handover.
+10. Add our approval category through /customise.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=storychief)
-- Read more: [enterprisedna.co/omni/instead-of/storychief](https://enterprisedna.co/omni/instead-of/storychief?utm_source=github&utm_medium=readme&utm_campaign=storychief)
+## Documents, views and evidence
 
-## License
+Change brand.json once. npm run docs creates three document types under docs-out/. npm run view creates the week, approval and results reports under views/. All are read-only HTML with escaped record text. Imported article HTML is shown as source text, never executed. /draft-brief and /draft-handover write new Markdown files in drafts/, never send.
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+/compliance checks whether recorded evidence supports the review process under cited NZ advertising principles. It cannot decide whether copy is true or legally compliant. Expiry and seven-day metric freshness are local editorial policies, not statutory time limits. See [compliance sources](docs/compliance.md) and [why no front end](docs/why-no-front-end.md).
+
+## Operating boundaries
+
+One organisation and trusted internal operators. No sign-in, tenant isolation, live feeds, drag-and-drop editor, mobile capture or offline sync. Actor labels are not authentication. Database owners can bypass access restrictions. configure limited roles and secured backups for shared use. No automatic publication, messaging, payment, external model calls or secret handling. No licensed content library is included.
+
+The JSON export covers all nine domain relations. it is portable data, not a tested backup restore. Use native database backups for recovery. Output files use restrictive permissions where supported and exports refuse overwrites. Keep real records out of git.
+
+MIT. Built by Enterprise DNA.

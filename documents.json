@@ -1,11 +1,65 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "editorial-brief",
+    "title": "Editorial brief",
+    "for_each": "select id,code from stories order by code",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Assignment",
+        "layout": "record",
+        "sql": "select code,title,owner,channel,language,due_on,brief from stories where id=$1"
+      },
+      {
+        "title": "Current copy as source text",
+        "layout": "record",
+        "sql": "select r.number as revision,r.body from revisions r join stories s on s.id=r.story_id and s.revision=r.number where s.id=$1",
+        "note": "Markup is shown as text so imported content cannot run code."
+      }
+    ]
+  },
+  {
+    "name": "approval-record",
+    "title": "Editorial approval record",
+    "for_each": "select id,code from stories order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Current item",
+        "layout": "record",
+        "sql": "select code,title,revision,claims_checked,advertising,disclosure from stories where id=$1"
+      },
+      {
+        "title": "All revision decisions",
+        "sql": "select revision,reviewer,due_on,decision,note,decided_on from reviews where story_id=$1 order by revision,reviewer"
+      },
+      {
+        "title": "Claim evidence history",
+        "sql": "select revision,claim,source,reviewer,checked_on,valid_until from claims where story_id=$1 order by revision,created_at",
+        "note": "A record check does not establish legal compliance or truth of a claim."
+      }
+    ]
+  },
+  {
+    "name": "campaign-handover",
+    "title": "Campaign handover brief",
+    "for_each": "select id,code from campaigns order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Objective",
+        "layout": "record",
+        "sql": "select code,name,objective,owner,ends_on from campaigns where id=$1"
+      },
+      {
+        "title": "Content and checks",
+        "sql": "select v.code,v.title,v.owner,v.due_on,v.status,v.can_handover from v_readiness v join stories s on s.id=v.id where s.campaign_id=$1 order by v.due_on,v.code"
+      },
+      {
+        "title": "Outstanding production work",
+        "sql": "select t.code,t.title,t.owner,t.due_on from tasks t join stories s on s.id=t.story_id where s.campaign_id=$1 and t.closed_on is null order by t.due_on,t.code",
+        "note": "Internal handover only. No social post, email or website change is made."
+      }
     ]
   }
 ]

@@ -1,0 +1,27 @@
+{
+  "data": {
+    "id": 901,
+    "title": "Example stockroom guide",
+    "excerpt": "A synthetic import example.",
+    "language": "en",
+    "content": "<p>Count cartons before placing the next order.</p>",
+    "due_at": "2026-11-12T09:00:00+00:00",
+    "published_at": null,
+    "updated_at": "2026-10-26T10:00:00+00:00",
+    "author": {
+      "data": {
+        "id": 90,
+        "first_name": "Demo",
+        "last_name": "Editor"
+      }
+    },
+    "tags": {
+      "data": [
+        {
+          "id": 1,
+          "name": "Stockroom"
+        }
+      ]
+    }
+  }
+}
